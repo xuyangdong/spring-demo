@@ -7,7 +7,7 @@
     <!-- 扫描类包，将标注spring注解的类自动转化称beans,同时完成bean的注入 -->
     <context:component-scan base-package="dao"></context:component-scan>
     <context:component-scan base-package="service"></context:component-scan>
-
+    <context:component-scan base-package="web"></context:component-scan>
 
     <!-- 定义一个使用DBCP实现的数据源 -->
     <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
@@ -15,25 +15,26 @@
         <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
         <property name="url" value="jdbc:mysql://localhost:3306/demodb"></property>
         <property name="username" value="root"></property>
-        <property name="password" value="1234"></property>
+        <property name="password" value=""></property>
     </bean>
 
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-        <property name="dataSource" value="dataSource"></property>
+        <property name="dataSource" ref="dataSource"></property>
     </bean>
     <!-- 配置事务管理器 -->
-    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" value="dataSource"></property>
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager" >
+        <property name="dataSource" ref="dataSource"></property>
     </bean>
     <!-- 通过AOP增强配置，是service下的所有bean都能拥有事务 -->
-    <aop:config proxy-target-class="true">
-        <aop:pointcut id="serviceMethod" expression="execution (* service.*.*(..))"/><!-- 注意第一个*后面的空格 -->
-        <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethod"/>
-    </aop:config>
-
     <tx:advice id="txAdvice" transaction-manager="transactionManager">
         <tx:attributes>
             <tx:method name="*"/>
         </tx:attributes>
     </tx:advice>
+<!--
+    <aop:config>
+        <aop:pointcut id="serviceMethod" expression="execution (* service.*.*(..))"/>
+        <aop:advisor pointcut-ref="serviceMethod" advice-ref="txAdvice" />
+    </aop:config>
+--><!-- 注意第一个*后面的空格 引入aop:config抛出ClassNotFoundException-->
 </beans>
