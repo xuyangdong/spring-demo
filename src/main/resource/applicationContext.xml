@@ -31,10 +31,10 @@
             <tx:method name="*"/>
         </tx:attributes>
     </tx:advice>
-<!--
+
     <aop:config>
         <aop:pointcut id="serviceMethod" expression="execution (* service.*.*(..))"/>
         <aop:advisor pointcut-ref="serviceMethod" advice-ref="txAdvice" />
     </aop:config>
---><!-- 注意第一个*后面的空格 引入aop:config抛出ClassNotFoundException-->
+<!-- 注意第一个*后面的空格 引入aop:config抛出ClassNotFoundException-->
 </beans>
